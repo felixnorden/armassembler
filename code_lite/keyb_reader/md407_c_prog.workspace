@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Workspace Name="md407_c_prog" Database="" Version="10.0.0">
   <Project Name="4-1" Path="4-1/4-1.project" Active="Yes"/>
+  <Project Name="delay" Path="delay/delay.project" Active="No"/>
+  <Project Name="asciidisplay" Path="asciidisplay/asciidisplay.project" Active="No"/>
+  <Project Name="test" Path="test/test.project" Active="No"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Environment/>
       <Project Name="4-1" ConfigName="Debug"/>
+      <Project Name="delay" ConfigName="Debug"/>
+      <Project Name="asciidisplay" ConfigName="Debug"/>
+      <Project Name="test" ConfigName="Debug"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="Release" Selected="yes">
       <Environment/>
       <Project Name="4-1" ConfigName="Release"/>
+      <Project Name="delay" ConfigName="Release"/>
+      <Project Name="asciidisplay" ConfigName="Release"/>
+      <Project Name="test" ConfigName="Release"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>
