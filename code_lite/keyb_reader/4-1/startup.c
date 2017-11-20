@@ -35,14 +35,6 @@ uint8 readColumns() {
 	return GPIO_D.IDR >> 8;
 }
 unsigned char keyb( void ) {
-	
-	static unsigned char keyPadValues[] = {	
-								'1','2','3','A',
-								'4','5','6','B',
-								'7','8','9','C',
-								'*','0','#','D'
-							};
-	
 	uint8 activeKey = 0xFF;
 	for (uint8 row = 0; row < 4; row++) {
 		activateRow(row);
@@ -51,7 +43,7 @@ unsigned char keyb( void ) {
 		for (uint8 column = 0; column < 4; column++) {
 			uint8 activeColumn = (columnValue & 0x1);
 			if (activeColumn) {
-				activeKey = keyPadValues[row * 4 + column];
+				activeKey = row * 4 + column;
 				return activeKey;
 			}
 			columnValue >>= 0x1;
@@ -60,9 +52,18 @@ unsigned char keyb( void ) {
 	return activeKey;
 }
 
-void out7seg(uint8 keyValue) {
-	if (keyValue < 16 && keyValue > 0) {
-		GPIO_D.ODR = keyValue;
+void out7seg(unsigned char keyValue) {
+	static uint8_c sevenSegmentCodes[] = {
+		0x06, 0x5B, 0x4F, 0x77,
+		0x66, 0x6D, 0x7D, 0x7C,
+		0x07, 0x7F, 0x67, 0x39,
+		0x79, 0x3F, 0x71, 0x5E
+	};
+	
+	if (keyValue < 16 && keyValue >= 0) {
+		GPIO_D.ODR = sevenSegmentCodes[keyValue];
+	} else {
+		GPIO_D.ODR = 0x00;
 	}
 }
 

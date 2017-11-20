@@ -5,15 +5,15 @@
 ## Debug
 ProjectName            :=4-1
 ConfigurationName      :=Debug
-WorkspacePath          :=C:/Users/amk19/Documents/md407_c_prog
-ProjectPath            :=C:/Users/amk19/Documents/md407_c_prog/4-1
+WorkspacePath          :=C:/Users/amk19/ETERM8/armassembler/code_lite/keyb_reader
+ProjectPath            :=C:/Users/amk19/ETERM8/armassembler/code_lite/keyb_reader/4-1
 IntermediateDirectory  :=./Debug
 OutDir                 := $(IntermediateDirectory)
 CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=amk19
-Date                   :=18/11/2017
+Date                   :=20/11/2017
 CodeLitePath           :=C:/cseapp/CodeLite
 LinkerName             :=$(CodeLiteDir)/tools/gcc-arm/bin/arm-none-eabi-g++.exe
 SharedObjectLinkerName :=$(CodeLiteDir)/tools/gcc-arm/arm-none-eabi-g++.exe -shared -fPIC
@@ -104,7 +104,7 @@ PreBuild:
 ## Objects
 ##
 $(IntermediateDirectory)/startup.c$(ObjectSuffix): startup.c $(IntermediateDirectory)/startup.c$(DependSuffix)
-	$(CC) $(SourceSwitch) "C:/Users/amk19/Documents/md407_c_prog/4-1/startup.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/startup.c$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "C:/Users/amk19/ETERM8/armassembler/code_lite/keyb_reader/4-1/startup.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/startup.c$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/startup.c$(DependSuffix): startup.c
 	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/startup.c$(ObjectSuffix) -MF$(IntermediateDirectory)/startup.c$(DependSuffix) -MM startup.c
 
