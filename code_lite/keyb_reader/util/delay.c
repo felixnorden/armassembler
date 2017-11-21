@@ -8,7 +8,7 @@ void delay_250ns( void )
 	SYS_TICK.CTRL = 0;
 	SYS_TICK.CTRL_COUNT = 0;
 	SYS_TICK.VAL = 0;
-	SYS_TICK.LOAD = 42;
+	SYS_TICK.LOAD = 41;
 	SYS_TICK.CTRL = 0x05;
 	
 	x = SYS_TICK.VAL;
@@ -30,11 +30,11 @@ void delay_micro( uint32_c us )
 	}
 }
 
-void delay_milli( uint32_c ms )
+void delay_milli( uint32 ms )
 {	
 	#ifdef SIMULATOR
 	ms = ms / 1000;
 	ms++;
 	#endif // SIMULATOR
-	delay_micro(ms);
+	delay_micro(ms * 1000);
 };

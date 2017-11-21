@@ -77,10 +77,10 @@ void ascii_command(uint8 command, uint16 commandDelay)
 
 void ascii_init(void)
 {	
-	ascii_command((uint8) 0b00111000, 39);
-	ascii_command((uint8) 0b00001110, 39);
-	ascii_command((uint8) 0b00000001, 1530);
-	ascii_command((uint8) 0b00000100, 1530);
+	ascii_command((uint8) 0b00111000, 50);
+	ascii_command((uint8) 0b00001110, 50);
+	ascii_command((uint8) 0b00000001, 1600);
+	ascii_command((uint8) 0b00000110, 1600);
 }
 
 void ascii_gotoxy(uint8 x, uint8 y) 
@@ -88,13 +88,13 @@ void ascii_gotoxy(uint8 x, uint8 y)
 	uint8 address = 	y == 2 ?
 						x - 1 + 0x40 :
 						x -1;
-	ascii_command(0x80 | address, 39);
+	ascii_command(0x80 | address, 50);
 }
 
 void ascii_write_char(unsigned char c)
 {
 	while ((ascii_read_status() & 0x80) == 0x80) {}
-	delay_micro(8);
+	delay_micro(10);
 	ascii_write_data(c);
 	delay_micro(50);
 }

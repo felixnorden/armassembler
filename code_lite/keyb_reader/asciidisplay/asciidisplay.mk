@@ -5,15 +5,15 @@
 ## Debug
 ProjectName            :=asciidisplay
 ConfigurationName      :=Debug
-WorkspacePath          :=C:/Users/amk19/ETERM8/armassembler/code_lite/keyb_reader
-ProjectPath            :=C:/Users/amk19/ETERM8/armassembler/code_lite/keyb_reader/asciidisplay
+WorkspacePath          :=C:/Users/feljo/Desktop/armassembler/code_lite/keyb_reader
+ProjectPath            :=C:/Users/feljo/Desktop/armassembler/code_lite/keyb_reader/asciidisplay
 IntermediateDirectory  :=./Debug
 OutDir                 := $(IntermediateDirectory)
 CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
-User                   :=amk19
-Date                   :=20/11/2017
+User                   :=feljo
+Date                   :=21/11/2017
 CodeLitePath           :=C:/cseapp/CodeLite
 LinkerName             :=$(CodeLiteDir)/tools/gcc-arm/bin/arm-none-eabi-g++.exe
 SharedObjectLinkerName :=$(CodeLiteDir)/tools/gcc-arm/arm-none-eabi-g++.exe -shared -fPIC
@@ -28,7 +28,7 @@ LibraryPathSwitch      :=-L
 PreprocessorSwitch     :=-D
 SourceSwitch           :=-c 
 OutputFile             :=$(IntermediateDirectory)/$(ProjectName).elf
-Preprocessors          :=
+Preprocessors          :=$(PreprocessorSwitch)USBDM 
 ObjectSwitch           :=-o 
 ArchiveOutputSwitch    := 
 PreprocessOnlySwitch   :=-E
@@ -104,7 +104,7 @@ PreBuild:
 ## Objects
 ##
 $(IntermediateDirectory)/startup.c$(ObjectSuffix): startup.c $(IntermediateDirectory)/startup.c$(DependSuffix)
-	$(CC) $(SourceSwitch) "C:/Users/amk19/ETERM8/armassembler/code_lite/keyb_reader/asciidisplay/startup.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/startup.c$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "C:/Users/feljo/Desktop/armassembler/code_lite/keyb_reader/asciidisplay/startup.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/startup.c$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/startup.c$(DependSuffix): startup.c
 	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/startup.c$(ObjectSuffix) -MF$(IntermediateDirectory)/startup.c$(DependSuffix) -MM startup.c
 
@@ -112,7 +112,7 @@ $(IntermediateDirectory)/startup.c$(PreprocessSuffix): startup.c
 	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/startup.c$(PreprocessSuffix) startup.c
 
 $(IntermediateDirectory)/up_util_delay.c$(ObjectSuffix): ../util/delay.c $(IntermediateDirectory)/up_util_delay.c$(DependSuffix)
-	$(CC) $(SourceSwitch) "C:/Users/amk19/ETERM8/armassembler/code_lite/keyb_reader/util/delay.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/up_util_delay.c$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "C:/Users/feljo/Desktop/armassembler/code_lite/keyb_reader/util/delay.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/up_util_delay.c$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/up_util_delay.c$(DependSuffix): ../util/delay.c
 	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/up_util_delay.c$(ObjectSuffix) -MF$(IntermediateDirectory)/up_util_delay.c$(DependSuffix) -MM ../util/delay.c
 
@@ -120,7 +120,7 @@ $(IntermediateDirectory)/up_util_delay.c$(PreprocessSuffix): ../util/delay.c
 	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/up_util_delay.c$(PreprocessSuffix) ../util/delay.c
 
 $(IntermediateDirectory)/asciidisplay.c$(ObjectSuffix): asciidisplay.c $(IntermediateDirectory)/asciidisplay.c$(DependSuffix)
-	$(CC) $(SourceSwitch) "C:/Users/amk19/ETERM8/armassembler/code_lite/keyb_reader/asciidisplay/asciidisplay.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/asciidisplay.c$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "C:/Users/feljo/Desktop/armassembler/code_lite/keyb_reader/asciidisplay/asciidisplay.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/asciidisplay.c$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/asciidisplay.c$(DependSuffix): asciidisplay.c
 	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/asciidisplay.c$(ObjectSuffix) -MF$(IntermediateDirectory)/asciidisplay.c$(DependSuffix) -MM asciidisplay.c
 

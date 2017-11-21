@@ -16,7 +16,10 @@ __asm volatile(
 	"_exit: B .\n"				/* never return */
 	) ;
 }
-void appInit(void) {	
+void appInit(void) {
+	#ifdef USBDM
+	* ((unsigned long *) 0x40023830) = 0x18;
+	#endif
 	GPIO_D.MODER &= 0x00000000;
 	GPIO_D.MODER |= 0x55005555;
 	

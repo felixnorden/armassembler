@@ -3,7 +3,7 @@
 #include "types.h"
 
 #define SYS_TICK_ADDRESS 0xE000E010
-#define ARM_250_CYCLE_TIME 42
+#define ARM_250_CYCLE_TIME 41
 
 typedef struct {
 	uint8 CTRL;
