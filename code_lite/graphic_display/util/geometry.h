@@ -1,5 +1,8 @@
 #include "types.h"
 
+#ifndef GEOMETRY_H
+#define GEOMETRY_H
+
 #define MAX_POINTS 20
 
 typedef struct tPoint
@@ -15,3 +18,5 @@ typedef struct tGeometry
     uint8 sizey;
     Point px[MAX_POINTS];
 } Geometry, *GeometryPtr;
+
+#endif // GEOMETRY_H
