@@ -21,14 +21,14 @@
   <Dependencies/>
   <VirtualDirectory Name="src">
     <File Name="startup.c"/>
-    <VirtualDirectory Name="util">
-      <File Name="../../util/delay.c"/>
-      <File Name="../../util/delay.h"/>
-      <File Name="../../util/gpio.h"/>
-      <File Name="../../util/graphicdisplay.c"/>
-      <File Name="../../util/graphicdisplay.h"/>
-      <File Name="../../util/types.h"/>
-    </VirtualDirectory>
+    <File Name="delay.c"/>
+    <File Name="graphicdisplay.c"/>
+    <File Name="delay.h"/>
+    <File Name="geometry.h"/>
+    <File Name="gpio.h"/>
+    <File Name="graphicdisplay.h"/>
+    <File Name="object.h"/>
+    <File Name="types.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="resources">
     <File Name="md407-ram.x"/>
@@ -46,7 +46,7 @@
     <Configuration Name="Debug" CompilerType="Cross GCC ( arm-none-eabi )" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g;-O0;-W" C_Options="-Wa,-adhln=test.s;-g;-O0;-w;-mthumb -march=armv6-m  -mfloat-abi=soft;-std=c99;-mthumb;-march=armv6-m" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
-        <Preprocessor Value="SIMULATOR"/>
+        <Preprocessor Value="USBDM"/>
       </Compiler>
       <Linker Options="-T$(ProjectPath)/md407-ram.x;-L$(ARM_V6LIB) -L$(ARM_GCC_V6LIB);-nostartfiles" Required="yes">
         <Library Value="gcc"/>

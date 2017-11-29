@@ -34,14 +34,15 @@ void graphic_wait_ready(void)
 	{
 		graphic_ctrl_bit_set(B_E);
 		delay_500ns();
+		uint8 status = GPIO_E.IDR_HIGH & LCD_BUSY;
 		graphic_ctrl_bit_clear(B_E);
 		delay_500ns();
-		if ((GPIO_E.IDR_HIGH & 0x80) == 0)
+		if (status == 0)
 		{
 			break;
 		}
 	}
-
+	
 	graphic_ctrl_bit_set(B_E);
 	GPIO_E.MODER = 0x55555555;
 }
@@ -67,9 +68,16 @@ uint8_c graphic_read(uint8_c controller)
 	GPIO_E.MODER = 0x55555555;
 
 	// TODO: MAY NEED CHANGE
-
-	graphic_wait_ready();
-
+	if(controller == B_CS1)
+	{
+		select_controller(B_CS1);
+		graphic_wait_ready();
+	}
+	if(controller == B_CS2)
+	{
+		select_controller(B_CS2);
+		graphic_wait_ready();
+	}
 	return rv;
 }
 
@@ -93,8 +101,17 @@ void graphic_write(uint8_c value, uint8_c controller)
 
 	graphic_ctrl_bit_clear(B_E);
 
-	graphic_wait_ready();
-
+	if(controller & B_CS1)
+	{
+		select_controller(B_CS1);
+		graphic_wait_ready();
+	}
+	if(controller & B_CS2)
+	{
+		select_controller(B_CS2);
+		graphic_wait_ready();
+	}
+	
 	GPIO_E.ODR_HIGH = 0;
 	graphic_ctrl_bit_set(B_E);
 
@@ -197,4 +214,5 @@ void pixel(uint8_c x, uint8_c y, uint8_c set)
 	else
 		mask = mask & temp;
 	graphic_write_data(mask, controller);
+	graphic_write_command(LCD_ON, B_CS1 | B_CS2);	
 }

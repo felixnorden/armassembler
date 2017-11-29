@@ -1,7 +1,9 @@
-#include "../../util/graphicdisplay.h"
-#include "../../util/gpio.h"
-#include "../../util/geometry.h"
-#include "../../util/object.h"
+#include "graphicdisplay.h"
+#include "gpio.h"
+#include "geometry.h"
+#include "object.h"
+
+#define SPEED 3
 
 /*
  * 	startup.c
@@ -11,6 +13,8 @@ void startup(void) __attribute__((naked)) __attribute__((section(".start_section
 
 void drawTest(void);
 void autopong(void);
+void ballSteering(void);
+uint8 keyb(void);
 
 void clear_object(ObjectPtr obj);
 void draw_object(ObjectPtr obj);
@@ -57,15 +61,92 @@ void init_app(void)
 #endif
 
 	GPIO_E.MODER = 0x55555555;
+	GPIO_E.OSPEEDR = 0x55555555;
+	GPIO_E.OTYPER = 0x0;
+	
+	GPIO_D.MODER = 0x55000000;
+	GPIO_D.OTYPER &= 0x0000;
+	GPIO_D.PUPDR &= 0x0000FFFF;
+	GPIO_D.PUPDR |= 0x00AA0000;
 }
 
 void main(void)
 {
 	// Test for drawing display
-	// drawTest();
+ 	 //drawTest();
 
 	// Autopong
-	autopong();
+	//autopong();
+	
+	// Steer the ball manually
+	ballSteering();
+}
+
+// x: index of row
+void activateRow(uint8 x) {
+	GPIO_D.ODR_HIGH = 0;
+	GPIO_D.ODR_HIGH |= (0x1 << (4 + x));
+}
+
+uint8 readColumns() {
+	return GPIO_D.IDR_HIGH;
+}
+
+
+ballSteering(void) {
+	ObjectPtr ballerBall = &ball;
+	init_app();
+	graphic_initialize();
+
+#ifndef SIMULATOR
+	graphic_clear_screen();
+#endif
+
+	ballerBall->set_speed(ballerBall, 0, 0);
+	while(TRUE)
+	{
+		uint8 input = keyb();
+		// Up
+		if (input == 1) {
+			ballerBall->set_speed(ballerBall, 0, -SPEED);
+		}
+		// Left
+		else if (input == 4) 
+		{
+			ballerBall->set_speed(ballerBall, -SPEED, 0);
+		}
+		// Down
+		else if (input == 5)
+		{
+			ballerBall->set_speed(ballerBall, 0, SPEED);
+		}
+		// Right
+		else if (input == 6)
+		{
+			ballerBall->set_speed(ballerBall, SPEED, 0);
+		}
+		
+		ballerBall->move(ballerBall);
+		delay_milli(40);
+	}
+}
+
+uint8 keyb( void ) {
+	uint8 activeKey = 0xFF;
+	for (uint8 row = 0; row < 4; row++) {
+		activateRow(row);
+		uint8 columnValue = readColumns();
+		
+		for (uint8 column = 0; column < 4; column++) {
+			uint8 activeColumn = (columnValue & 0x1);
+			if (activeColumn) {
+				activeKey = row * 4 + column;
+				return activeKey;
+			}
+			columnValue >>= 0x1;
+		}
+	}
+	return activeKey;
 }
 
 void autopong(void)

@@ -1,15 +1,12 @@
-Debug/startup.c.o: startup.c ../../util/graphicdisplay.h \
- ../../util/types.h ../../util/gpio.h ../../util/geometry.h \
- ../../util/object.h ../../util/geometry.h
+Debug/startup.c.o: startup.c graphicdisplay.h types.h gpio.h geometry.h \
+ object.h
 
-../../util/graphicdisplay.h:
+graphicdisplay.h:
 
-../../util/types.h:
+types.h:
 
-../../util/gpio.h:
+gpio.h:
 
-../../util/geometry.h:
+geometry.h:
 
-../../util/object.h:
-
-../../util/geometry.h:
+object.h:

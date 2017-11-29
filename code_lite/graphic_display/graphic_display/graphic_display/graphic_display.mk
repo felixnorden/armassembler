@@ -5,15 +5,15 @@
 ## Debug
 ProjectName            :=graphic_display
 ConfigurationName      :=Debug
-WorkspacePath          :=C:/development/armassembler/code_lite/graphic_display/graphic_display
-ProjectPath            :=C:/development/armassembler/code_lite/graphic_display/graphic_display/graphic_display
+WorkspacePath          :=C:/Users/feljo/Desktop/armassembler/code_lite/graphic_display/graphic_display
+ProjectPath            :=C:/Users/feljo/Desktop/armassembler/code_lite/graphic_display/graphic_display/graphic_display
 IntermediateDirectory  :=./Debug
 OutDir                 := $(IntermediateDirectory)
 CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
-User                   :=Lenovo
-Date                   :=27/11/2017
+User                   :=feljo
+Date                   :=28/11/2017
 CodeLitePath           :=C:/cseapp/CodeLite
 LinkerName             :=$(CodeLiteDir)/tools/gcc-arm/bin/arm-none-eabi-g++.exe
 SharedObjectLinkerName :=$(CodeLiteDir)/tools/gcc-arm/arm-none-eabi-g++.exe -shared -fPIC
@@ -28,7 +28,7 @@ LibraryPathSwitch      :=-L
 PreprocessorSwitch     :=-D
 SourceSwitch           :=-c 
 OutputFile             :=$(IntermediateDirectory)/$(ProjectName).elf
-Preprocessors          :=$(PreprocessorSwitch)SIMULATOR 
+Preprocessors          :=$(PreprocessorSwitch)USBDM 
 ObjectSwitch           :=-o 
 ArchiveOutputSwitch    := 
 PreprocessOnlySwitch   :=-E
@@ -66,7 +66,7 @@ ARM_V6LIB:=$(CodeLiteDir)/tools/gcc-arm/arm-none-eabi/lib/thumb/v6-m
 ARM_GCC_V6LIB:=$(CodeLiteDir)/tools/gcc-arm/lib/gcc/arm-none-eabi/6.3.1/thumb/v6-m
 ARM_M4FPLIB:=$(CodeLiteDir)/tools/gcc-arm/arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard
 ARM_GCC_M4FPLIB:=$(CodeLiteDir)/tools/gcc-arm/lib/gcc/arm-none-eabi/6.3.1/thumb/v7e-m
-Objects0=$(IntermediateDirectory)/startup.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_util_delay.c$(ObjectSuffix) $(IntermediateDirectory)/up_up_util_graphicdisplay.c$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/startup.c$(ObjectSuffix) $(IntermediateDirectory)/delay.c$(ObjectSuffix) $(IntermediateDirectory)/graphicdisplay.c$(ObjectSuffix) 
 
 
 
@@ -104,28 +104,28 @@ PreBuild:
 ## Objects
 ##
 $(IntermediateDirectory)/startup.c$(ObjectSuffix): startup.c $(IntermediateDirectory)/startup.c$(DependSuffix)
-	$(CC) $(SourceSwitch) "C:/development/armassembler/code_lite/graphic_display/graphic_display/graphic_display/startup.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/startup.c$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "C:/Users/feljo/Desktop/armassembler/code_lite/graphic_display/graphic_display/graphic_display/startup.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/startup.c$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/startup.c$(DependSuffix): startup.c
 	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/startup.c$(ObjectSuffix) -MF$(IntermediateDirectory)/startup.c$(DependSuffix) -MM startup.c
 
 $(IntermediateDirectory)/startup.c$(PreprocessSuffix): startup.c
 	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/startup.c$(PreprocessSuffix) startup.c
 
-$(IntermediateDirectory)/up_up_util_delay.c$(ObjectSuffix): ../../util/delay.c $(IntermediateDirectory)/up_up_util_delay.c$(DependSuffix)
-	$(CC) $(SourceSwitch) "C:/development/armassembler/code_lite/graphic_display/util/delay.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/up_up_util_delay.c$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/up_up_util_delay.c$(DependSuffix): ../../util/delay.c
-	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/up_up_util_delay.c$(ObjectSuffix) -MF$(IntermediateDirectory)/up_up_util_delay.c$(DependSuffix) -MM ../../util/delay.c
+$(IntermediateDirectory)/delay.c$(ObjectSuffix): delay.c $(IntermediateDirectory)/delay.c$(DependSuffix)
+	$(CC) $(SourceSwitch) "C:/Users/feljo/Desktop/armassembler/code_lite/graphic_display/graphic_display/graphic_display/delay.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/delay.c$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/delay.c$(DependSuffix): delay.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/delay.c$(ObjectSuffix) -MF$(IntermediateDirectory)/delay.c$(DependSuffix) -MM delay.c
 
-$(IntermediateDirectory)/up_up_util_delay.c$(PreprocessSuffix): ../../util/delay.c
-	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/up_up_util_delay.c$(PreprocessSuffix) ../../util/delay.c
+$(IntermediateDirectory)/delay.c$(PreprocessSuffix): delay.c
+	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/delay.c$(PreprocessSuffix) delay.c
 
-$(IntermediateDirectory)/up_up_util_graphicdisplay.c$(ObjectSuffix): ../../util/graphicdisplay.c $(IntermediateDirectory)/up_up_util_graphicdisplay.c$(DependSuffix)
-	$(CC) $(SourceSwitch) "C:/development/armassembler/code_lite/graphic_display/util/graphicdisplay.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/up_up_util_graphicdisplay.c$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/up_up_util_graphicdisplay.c$(DependSuffix): ../../util/graphicdisplay.c
-	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/up_up_util_graphicdisplay.c$(ObjectSuffix) -MF$(IntermediateDirectory)/up_up_util_graphicdisplay.c$(DependSuffix) -MM ../../util/graphicdisplay.c
+$(IntermediateDirectory)/graphicdisplay.c$(ObjectSuffix): graphicdisplay.c $(IntermediateDirectory)/graphicdisplay.c$(DependSuffix)
+	$(CC) $(SourceSwitch) "C:/Users/feljo/Desktop/armassembler/code_lite/graphic_display/graphic_display/graphic_display/graphicdisplay.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/graphicdisplay.c$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/graphicdisplay.c$(DependSuffix): graphicdisplay.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/graphicdisplay.c$(ObjectSuffix) -MF$(IntermediateDirectory)/graphicdisplay.c$(DependSuffix) -MM graphicdisplay.c
 
-$(IntermediateDirectory)/up_up_util_graphicdisplay.c$(PreprocessSuffix): ../../util/graphicdisplay.c
-	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/up_up_util_graphicdisplay.c$(PreprocessSuffix) ../../util/graphicdisplay.c
+$(IntermediateDirectory)/graphicdisplay.c$(PreprocessSuffix): graphicdisplay.c
+	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/graphicdisplay.c$(PreprocessSuffix) graphicdisplay.c
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)
