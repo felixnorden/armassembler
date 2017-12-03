@@ -1,8 +1,8 @@
 .PHONY: clean All
 
 All:
-	@echo "----------Building project:[ asciidisplay - Debug ]----------"
-	@cd "asciidisplay" && "$(MAKE)" -f  "asciidisplay.mk" && "$(MAKE)" -f  "asciidisplay.mk" PostBuild
+	@echo "----------Building project:[ FlipFlopIrq - Debug ]----------"
+	@cd "FlipFlopIrq" && "$(MAKE)" -f  "FlipFlopIrq.mk" && "$(MAKE)" -f  "FlipFlopIrq.mk" PostBuild
 clean:
-	@echo "----------Cleaning project:[ asciidisplay - Debug ]----------"
-	@cd "asciidisplay" && "$(MAKE)" -f  "asciidisplay.mk" clean
+	@echo "----------Cleaning project:[ FlipFlopIrq - Debug ]----------"
+	@cd "FlipFlopIrq" && "$(MAKE)" -f  "FlipFlopIrq.mk" clean
