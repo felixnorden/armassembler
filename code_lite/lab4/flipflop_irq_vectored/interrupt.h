@@ -94,4 +94,24 @@ typedef volatile nvic* nvic_ptr;
 #define NVIC_IPR0   (*((uint32)     0xE000E400))
 #define NVIC_IPR20  (*((uint8)      0xE000E420))
 
+
+
+#define SYSCFG_BASE       (*((volatile uint32 *)0x40013800)) 
+#define SYSCFG_EXTICR1       (*((volatile uint32 *)0x40013808)) 
+
+
+#define EXTI3_IRQVEC       (*((void (**)(void))0x2001C064)) 
+#define EXTI2_IRQVEC       (*((void (**)(void))0x2001C060)) 
+#define EXTI1_IRQVEC       (*((void (**)(void))0x2001C05C)) 
+#define EXTI0_IRQVEC       (*((void (**)(void))0x2001C058)) 
+
+#define NVIC_EXTI3_IRQ_BPOS   (1 << 9) 
+#define NVIC_EXTI2_IRQ_BPOS   (1 << 8) 
+#define NVIC_EXTI1_IRQ_BPOS   (1 << 7) 
+#define NVIC_EXTI0_IRQ_BPOS   (1 << 6) 
+#define EXTI3_IRQ_BPOS       (1 << 3) 
+#define EXTI2_IRQ_BPOS       (1 << 2) 
+#define EXTI1_IRQ_BPOS       (1 << 1) 
+#define EXTI0_IRQ_BPOS       (1 << 0) 
+
 #endif // INTERRUPT_H
