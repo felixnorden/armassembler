@@ -33,22 +33,16 @@ void irq_handler(void)
 	
 }
 init_app(void) {
-	*SCB_VTOR = 0x2001C000;
 	GPIO_D.MODER = 0x00005555;
 	
-	//SYS_CFG.EXTICR1 &= 0x0FFF;
-	//SYS_CFG.EXTICR1 |= 0x4000;
 	*((uint32*) 0x40013808) = 0x4000;
 
 	EXTI.IMR |= 0x8;
 	EXTI.FTSR |= 0x8;
 	EXTI.RTSR = 0x0;
-	//*((uint32*) 0x40013C00) = 0x8;
-	//*((uint32*) 0x40013C08) = 0x8;
 
 	*((void (**)(void) ) 0x2001C064) = irq_handler;
 	NVIC_ISER.REG_0 |= (1<<9);
-	//*((uint32*) 0xE000E100) = 0x200;
 }
 
 void main(void)

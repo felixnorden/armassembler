@@ -1,3 +1,11 @@
 *.elf
 *.lst
 *.s19
+*.s
+
+
+
+debug/
+.codelite/
+
+*.mk
