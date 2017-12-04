@@ -26,7 +26,7 @@ void irq_incremet()
 {
 	// Not sure why these three are in this order
 	// Feels like the EXTI line should be last 
-	EXTI_PR = EXTI0_IRQ_BPOS;
+	EXTI.PR = EXTI0_IRQ_BPOS;
 	IRQ_PINS |= (1<<4);
 	IRQ_PINS &= ~(1<<4);
 	
@@ -36,7 +36,7 @@ void irq_incremet()
 
 void irq_reset()
 {
-	EXTI_PR = EXTI1_IRQ_BPOS;
+	EXTI.PR = EXTI1_IRQ_BPOS;
 	IRQ_PINS |= (1<<5);
 	IRQ_PINS &= ~(1<<5);
 	
@@ -52,7 +52,7 @@ void irq_periodic()
 	}
 	OUTPUT = ~OUTPUT;
 	
-	EXTI_PR = EXTI2_IRQ_BPOS;	
+	EXTI.PR = EXTI2_IRQ_BPOS;	
 	IRQ_PINS |= (1<<6);
 	IRQ_PINS &= ~(1<<6);
 }
@@ -62,18 +62,16 @@ void init_app(void)
 	GPIO_D.MODER = 0x00005555;
 	GPIO_E.MODER = 0x00005500;
 
-	SYSCFG_EXTICR1 = 0x0444;
+	SYS_CFG.EXTICR1 = 0x0444;
     
-    
-	EXTI_IMR = EXTI0_IRQ_BPOS | EXTI1_IRQ_BPOS | EXTI2_IRQ_BPOS;
-	EXTI_RTSR = EXTI0_IRQ_BPOS | EXTI1_IRQ_BPOS | EXTI2_IRQ_BPOS;
-	EXTI_PR = (EXTI0_IRQ_BPOS | EXTI1_IRQ_BPOS | EXTI2_IRQ_BPOS);
+	EXTI.IMR = EXTI0_IRQ_BPOS | EXTI1_IRQ_BPOS | EXTI2_IRQ_BPOS;
+	EXTI.RTSR = EXTI0_IRQ_BPOS | EXTI1_IRQ_BPOS | EXTI2_IRQ_BPOS;
+	EXTI.PR = (EXTI0_IRQ_BPOS | EXTI1_IRQ_BPOS | EXTI2_IRQ_BPOS);
     
 	EXTI0_IRQVEC = irq_incremet;
 	EXTI1_IRQVEC = irq_reset;
 	EXTI2_IRQVEC = irq_periodic;
-	NVIC_ISER.REG_0 |= 
-	NVIC_ISER0 |= NVIC_EXTI0_IRQ_BPOS | NVIC_EXTI1_IRQ_BPOS | NVIC_EXTI2_IRQ_BPOS;
+	NVIC_ISER.REG_0 |= NVIC_EXTI0_IRQ_BPOS | NVIC_EXTI1_IRQ_BPOS | NVIC_EXTI2_IRQ_BPOS;
 }
 
 void main(void)
