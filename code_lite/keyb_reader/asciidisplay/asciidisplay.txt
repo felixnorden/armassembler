@@ -1,1 +1,0 @@
-./Debug/startup.c.o ./Debug/up_util_delay.c.o ./Debug/asciidisplay.c.o   
