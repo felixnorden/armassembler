@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Workspace Name="lab4" Database="" Version="10.0.0">
-  <Project Name="flip_flop_irq" Path="flip_flop_irq/flip_flop_irq.project" Active="Yes"/>
-  <Project Name="flipflop_irq_vectored" Path="flipflop_irq_vectored/flipflop_irq_vectored.project"/>
+  <Project Name="flip_flop_irq" Path="flip_flop_irq/flip_flop_irq.project" Active="No"/>
+  <Project Name="flipflop_irq_vectored" Path="flipflop_irq_vectored/flipflop_irq_vectored.project" Active="Yes"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Environment/>

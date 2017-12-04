@@ -131,6 +131,9 @@ monitor restart</PostConnectCommands>
   </Settings>
   <VirtualDirectory Name="src">
     <File Name="startup.c"/>
+    <File Name="interrupt.h"/>
+    <File Name="types.h"/>
+    <File Name="gpio.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="resources">
     <File Name="md407-ram.x"/>
