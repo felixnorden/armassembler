@@ -24,8 +24,8 @@ __asm volatile(
 uint8 volatile counter = 0;
 void irq_handler(void)
 {
-	uint32 x = EXTI.PR;
-	uint32 y = &EXTI.PR;
+	// uint32 x = EXTI.PR;
+	// uint32 y = &EXTI.PR;
 	if((EXTI.PR & 0x08)) {
 		counter++;
 		EXTI.PR |= 0x08;		
