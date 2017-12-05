@@ -7,6 +7,7 @@
  #include "interrupt.h"
  #include "gpio.h"
 
+#define RCC_APB2ENR 0x40023844
  #define SCB_VTOR ((uint32*) 0xE000ED08)
  
 void startup(void) __attribute__((naked)) __attribute__((section (".start_section")) );
@@ -24,32 +25,53 @@ __asm volatile(
 uint8 volatile counter = 0;
 void irq_handler(void)
 {
-	// uint32 x = EXTI.PR;
-	// uint32 y = &EXTI.PR;
 	if((EXTI.PR & 0x08)) {
-		counter++;
-		EXTI.PR |= 0x08;		
+		uint8 irqId = GPIO_E.IDR_LOW;
+		
+
+		if((GPIO_E.IDR_LOW & 0x1)) {
+			counter++;
+			irqId = 1;
+		} else if ((GPIO_E.IDR_LOW & (1<<1))) {
+			counter = 0;
+			irqId = 2;
+		} else if ((GPIO_E.IDR_LOW & (1<<2))) {
+			irqId = 4;
+			GPIO_D.ODR_LOW = ~GPIO_D.ODR_LOW;
+		}
+
+		GPIO_E.ODR_LOW |= (irqId << 4);
+		GPIO_E.ODR_LOW &= ~(irqId << 4);
+		EXTI.PR |= 0x08;
+			
 	}
 	
 }
 init_app(void) {
+	*((uint32*)RCC_APB2ENR) = 0x4000;
+    *SCB_VTOR = 0x2001C000;
+
 	GPIO_D.MODER = 0x00005555;
-	
-	*((uint32*) 0x40013808) = 0x4000;
+	GPIO_E.MODER = 0x00001500;
+    
+    GPIO_E.ODR_LOW = 0x70;
+    GPIO_E.ODR_LOW = ~0x70;
+    
+	SYS_CFG.EXTICR1 = 0x4000;
 
 	EXTI.IMR |= 0x8;
 	EXTI.FTSR |= 0x8;
-	EXTI.RTSR = 0x0;
 
 	*((void (**)(void) ) 0x2001C064) = irq_handler;
-	NVIC_ISER.REG_0 |= (1<<9);
+	
+    
+    NVIC_ISER.REG_0 |= (1<<9);
 }
 
 void main(void)
 {
 	init_app();
 	while (1) {
-		uint32 x = GPIO_E.IDR_LOW;
 		GPIO_D.ODR_LOW = counter;
 	}
 }
