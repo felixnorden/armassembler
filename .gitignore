@@ -5,7 +5,7 @@
 
 
 
-debug/
+Debug/
 .codelite/
 
 *.mk
