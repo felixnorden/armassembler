@@ -30,14 +30,28 @@ __asm volatile(
 
 
 init_app(void) {
+	
+#ifdef USBDM
+
+	// Starta klockor
+	*((unsigned long *) 0x40023830) = 0x18;
+	
+	// Init PLL
+	__asm volatile( " LDR R0,=0x08000209\n BLX R0 \n");
 	GPIO_D.MODER = 0x00005555;
+	
+	// Relokera vektortabell
+	*((unsigned long *) 0xE000ED08) = 0x2001C000;
+	
+#endif
 	
 	*((void (**) (void)) 0x2001C03C) = sysTick_irq_handler;
 }
 
 void main(void)
 {
-	uint8 c = 0;
+	uint32 syncDelay = 0;
+	uint8 c = 1;
 	init_app();
 	GPIO_D.ODR_LOW = 0x00;
 	delay(DELAY_COUNT);
@@ -46,8 +60,15 @@ void main(void)
 		if (sysTick_flag == 1) {
 			break;
 		}
+		
 		GPIO_D.ODR_LOW = c;
-        c++;
+        
+		if(syncDelay == 150000){
+			c == 0x0 ? c = 1 : (c <<= 1);
+			syncDelay = 0;
+			
+		}
+		syncDelay++;
 	}
 	GPIO_D.ODR_LOW = 0x0;
 }

@@ -25,7 +25,7 @@ void delay_micro( uint32_c us );
 void delay_milli( uint32_c ms );
 
 void sysTick_irq_handler(void);
-void delay(uint8 counter);
+void delay(uint32 counter);
 void delay_1micro(void);
 
 #endif

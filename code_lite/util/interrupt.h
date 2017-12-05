@@ -4,6 +4,7 @@
 
 #include "types.h"
 #define VTOR            0x2001C000
+#define SCB_VTOR (*((uint32*) 0xE000ED08))
 
 // SYS_CFG
 

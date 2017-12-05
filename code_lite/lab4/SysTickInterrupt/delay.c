@@ -72,7 +72,7 @@ void delay_1micro(void)
 	SYS_TICK.CTRL = 0x07;
 }
 
-void delay(uint8 counter)
+void delay(uint32 counter)
 {
 	delay_counter = counter;
 	sysTick_flag = 0;

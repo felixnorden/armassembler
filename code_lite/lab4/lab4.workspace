@@ -2,16 +2,19 @@
 <CodeLite_Workspace Name="lab4" Database="" Version="10.0.0">
   <Project Name="flip_flop_irq" Path="flip_flop_irq/flip_flop_irq.project" Active="No"/>
   <Project Name="flipflop_irq_vectored" Path="flipflop_irq_vectored/flipflop_irq_vectored.project" Active="Yes"/>
+  <Project Name="SysTickInterrupt" Path="SysTickInterrupt/SysTickInterrupt.project" Active="No"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Environment/>
       <Project Name="flip_flop_irq" ConfigName="Debug"/>
       <Project Name="flipflop_irq_vectored" ConfigName="Debug"/>
+      <Project Name="SysTickInterrupt" ConfigName="Debug"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="Release" Selected="yes">
       <Environment/>
       <Project Name="flip_flop_irq" ConfigName="Release"/>
       <Project Name="flipflop_irq_vectored" ConfigName="Release"/>
+      <Project Name="SysTickInterrupt" ConfigName="Release"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>
