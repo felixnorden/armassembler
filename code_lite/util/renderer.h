@@ -6,10 +6,10 @@
 #include "graphicdisplay.h"
 
 typedef struct {
-    frame_buffer *frame;
+    FrameBuffer *frame;
     void (*renderFrame)(Renderer renderer);
     void (*init)(void);
-    void (*setFrameBuffer)(Renderer renderer, frame_buffer *fb);
+    void (*setFrameBuffer)(Renderer renderer, FrameBuffer *fb);
 } Renderer;
 
 // Renders active frame in renderer to the graphicsdisplay
@@ -18,8 +18,8 @@ void renderFrame(Renderer renderer);
 // Initializes the renderer
 void init(void);
 
-// Sets the active frame_buffer in the renderer
-void setFrameBuffer(Renderer renderer, frame_buffer *fb);
+// Sets the active FrameBuffer in the renderer
+void setFrameBuffer(Renderer renderer, FrameBuffer *fb);
 
 // Default renderer
 Renderer renderer = {

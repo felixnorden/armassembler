@@ -1,6 +1,6 @@
 #include "objectdrawer.h"
 
-void drawObjectToBuffer(Object object, frame_buffer fb, uint8 clearEnabled)
+void drawObjectToBuffer(Object object, FrameBuffer fb, uint8 clearEnabled)
 {
     uint8 xOffset = object.geo->sizex;
     uint8 yOffset = object.geo->sizey;

@@ -22,6 +22,6 @@ void init(void) {
     graphic_initialize();
 }
 
-void setFrameBuffer(Renderer renderer, frame_buffer *fb) {
+void setFrameBuffer(Renderer renderer, FrameBuffer *fb) {
     renderer.frame = fb;
 }
