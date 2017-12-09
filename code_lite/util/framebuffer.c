@@ -2,14 +2,14 @@
 
 void setPixel(FrameBuffer* this, uint8 x, uint8 y, uint8 activate)
 {
-    uint32 * pageAddress = ((this->frame) + (8 * y));
+    uint32 * pageAddress = ((this->frame) + (y / 8) + (8 * x));
     if (activate)
     {
-        *pageAddress |= (1 << x);
+        *pageAddress |= (1 << y);
     }
     else
     {
-        *pageAddress &= ~(1 << x);
+        *pageAddress &= ~(1 << y);
     }
 }
 

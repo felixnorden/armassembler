@@ -16,8 +16,8 @@ static uint8 buffer[PAGES];
 typedef struct tFrameBuffer{
     uint8_c    size_x;
     uint8_c    size_y;
-    uint8_c    pages;
-    uint8**    frame;
+    uint16_c   pages;
+    uint8*     frame;
     void (*setPixel)(struct tFrameBuffer* this, uint8 x, uint8 y, uint8 activate);
     uint8 (*getPageValue)(struct tFrameBuffer* this, uint16 pageNumber);
 } FrameBuffer;
@@ -35,7 +35,7 @@ const FrameBuffer frameBuffer = {
     SIZE_X,
     SIZE_Y,
     PAGES,
-    &buffer,
+    buffer,
     setPixel,
     getPageValue
 };

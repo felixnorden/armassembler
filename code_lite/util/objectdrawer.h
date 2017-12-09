@@ -5,6 +5,6 @@
 #include "framebuffer.h"
 
 // Draws an object's geometry onto a framebuffer, with its position in the center of the geometry
-void drawObjectToBuffer(Object object, FrameBuffer fb, uint8 clearEnabled);
+void drawObjectToBuffer(Object object, FrameBuffer* fb, uint8 clearEnabled);
 
 #endif // OBJECTDRAWER_H
