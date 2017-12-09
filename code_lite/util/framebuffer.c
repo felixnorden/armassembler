@@ -1,15 +1,19 @@
 #include "framebuffer.h"
 
-void setPixel(FrameBuffer fb,uint16 x, uint16 y, uint8 activate) {
-    uint32* pageAddress = (((uint32*)fb.frame) + (8 * y));
-    if (activate) {
-        *pageAddress |= (1<<x);
-    } else {
-        *pageAddress &= ~(1<<x);        
+void setPixel(FrameBuffer* this, uint8 x, uint8 y, uint8 activate)
+{
+    uint32 * pageAddress = ((this->frame) + (8 * y));
+    if (activate)
+    {
+        *pageAddress |= (1 << x);
+    }
+    else
+    {
+        *pageAddress &= ~(1 << x);
     }
 }
 
-uint8 getPageValue(FrameBuffer fb,uint16 pageNumber) {
-    uint32* pageAddress = (((uint32*)fb.frame) + pageNumber);
-    return *pageAddress;
+uint8 getPageValue(FrameBuffer* this, uint16 pageNumber)
+{
+    return this->frame[pageNumber];
 }

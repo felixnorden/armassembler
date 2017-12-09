@@ -1,7 +1,9 @@
 #include "renderer.h"
 
-void renderFrame(Renderer renderer) {
-    for (uint16 page = 0; page < renderer.frame->pages; page++) {
+void renderFrame(Renderer* renderer) {
+    for(uint8 adress = 0; adress < SIZE_Y; adress++) 
+    {
+        for (uint8 page = 0; page < renderer->frame->pages; page++) {
         
         // Select active display
         uint8 selectedScreen = page < 64 ? B_CS1 : B_CS2;
@@ -12,9 +14,10 @@ void renderFrame(Renderer renderer) {
 
         // Render byte to display
         graphic_write_data(
-            renderer.frame->getPageValue(renderer.frame, page),
+            renderer->frame->getPageValue(renderer->frame, page),
             selectedScreen
         );
+    }
     }
 }
 
@@ -22,6 +25,6 @@ void init(void) {
     graphic_initialize();
 }
 
-void setFrameBuffer(Renderer renderer, FrameBuffer *fb) {
-    renderer.frame = fb;
+void setFrameBuffer(Renderer* renderer, FrameBuffer *fb) {
+    renderer->frame = fb;
 }

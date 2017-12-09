@@ -5,11 +5,12 @@
 #include "framebuffer.h"
 #include "graphicdisplay.h"
 
-typedef struct {
+typedef struct tRenderer
+{
     FrameBuffer *frame;
-    void (*renderFrame)(Renderer renderer);
+    void (*renderFrame)(struct tRenderer *renderer);
     void (*init)(void);
-    void (*setFrameBuffer)(Renderer renderer, FrameBuffer *fb);
+    void (*setFrameBuffer)(struct tRenderer *renderer, FrameBuffer *fb);
 } Renderer;
 
 // Renders active frame in renderer to the graphicsdisplay
@@ -23,10 +24,9 @@ void setFrameBuffer(Renderer renderer, FrameBuffer *fb);
 
 // Default renderer
 Renderer renderer = {
-    0,
+    &frameBuffer,
     renderFrame,
     init,
-    setFrameBuffer
-};
+    setFrameBuffer};
 
 #endif // RENDERER_H
