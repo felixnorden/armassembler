@@ -22,11 +22,6 @@ void init(void);
 // Sets the active FrameBuffer in the renderer
 void setFrameBuffer(Renderer *renderer, FrameBuffer *fb);
 
-// Default renderer
-Renderer renderer = {
-    0,
-    renderFrame,
-    init,
-    setFrameBuffer};
+extern Renderer renderer;
 
 #endif // RENDERER_H

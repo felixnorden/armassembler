@@ -19,6 +19,31 @@
   </Plugins>
   <Description/>
   <Dependencies/>
+  <VirtualDirectory Name="src">
+    <File Name="startup.c"/>
+    <File Name="breakoutobjects.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="resources">
+    <File Name="md407-ram.x"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="util">
+    <File Name="util/delay.c"/>
+    <File Name="util/delay.h"/>
+    <File Name="util/framebuffer.c"/>
+    <File Name="util/framebuffer.h"/>
+    <File Name="util/geometry.h"/>
+    <File Name="util/gpio.h"/>
+    <File Name="util/graphicdisplay.c"/>
+    <File Name="util/graphicdisplay.h"/>
+    <File Name="util/interrupt.h"/>
+    <File Name="util/object.h"/>
+    <File Name="util/objectdrawer.c"/>
+    <File Name="util/objectdrawer.h"/>
+    <File Name="util/renderer.c"/>
+    <File Name="util/renderer.h"/>
+    <File Name="util/types.h"/>
+    <File Name="util/object.c"/>
+  </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
       <Compiler Options="" C_Options="" Assembler="">
@@ -32,6 +57,7 @@
     <Configuration Name="Debug" CompilerType="Cross GCC ( arm-none-eabi )" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g;-O0;-W" C_Options="-Wa,-adhln=test.s;-g;-O0;-w;-mthumb -march=armv6-m  -mfloat-abi=soft;-std=c99;-mthumb;-march=armv6-m" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
+        <Preprocessor Value="SIMULATOR"/>
       </Compiler>
       <Linker Options="-T$(ProjectPath)/md407-ram.x;-L$(ARM_V6LIB) -L$(ARM_GCC_V6LIB);-nostartfiles" Required="yes">
         <Library Value="gcc"/>
@@ -129,10 +155,4 @@ monitor restart</PostConnectCommands>
       </Completion>
     </Configuration>
   </Settings>
-  <VirtualDirectory Name="src">
-    <File Name="startup.c"/>
-  </VirtualDirectory>
-  <VirtualDirectory Name="resources">
-    <File Name="md407-ram.x"/>
-  </VirtualDirectory>
 </CodeLite_Project>

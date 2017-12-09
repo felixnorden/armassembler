@@ -73,13 +73,13 @@ void init_app(void)
 void main(void)
 {
 	// Test for drawing display
- 	 //drawTest();
+	drawTest();
 
 	// Autopong
 	//autopong();
 	
 	// Steer the ball manually
-	ballSteering();
+	//ballSteering();
 }
 
 // x: index of row

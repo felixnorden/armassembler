@@ -14,24 +14,8 @@ typedef struct tObject
     void                (*set_speed) (struct tObject *, int8 speedx, int8 speedy);
 } Object, *ObjectPtr;
 
-void set_object_speed(ObjectPtr obj, int8 speedx, int8 speedy)
-{
-    obj->dirx = speedx;
-    obj->diry = speedy;
-}
+void set_object_speed(ObjectPtr obj, int8 speedx, int8 speedy);
+void update_object(ObjectPtr obj);
 
-void update_object(ObjectPtr obj)
-{
-    obj->clear(obj);
-    obj->posx = obj->posx + obj->dirx;
-    obj->posy = obj->posy + obj->diry;
 
-    if(obj->posx < 1 || obj->posx > 128)
-        obj->dirx = -obj->dirx;
-
-    if(obj->posy < 1 || obj->posy > 64)
-        obj->diry = -obj->diry;
-
-    obj->draw(obj);
-}
 #endif // OBJECT_H

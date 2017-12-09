@@ -1,6 +1,6 @@
 #include "framebuffer.h"
 
-const FrameBuffer frameBuffer = {
+FrameBuffer frameBuffer = {
     SIZE_X,
     SIZE_Y,
     PAGES,
@@ -11,18 +11,19 @@ const FrameBuffer frameBuffer = {
 
 void setPixel(FrameBuffer* this, uint8 x, uint8 y, uint8 activate)
 {
-    uint32 * pageAddress = ((this->frame) + (y / 8) + (8 * x));
+    uint8 * pageAddress = ((this->frame) + (y / 8) + (8 * x));
     if (activate)
     {
-        *pageAddress |= (1 << y);
+        *pageAddress |= (1 << y % 8);
     }
     else
     {
-        *pageAddress &= ~(1 << y);
+        *pageAddress &= ~(1 << y % 8);
     }
 }
 
 uint8 getPageValue(FrameBuffer* this, uint16 pageNumber)
 {
-    return this->frame[pageNumber];
+	uint8 value = this->frame[pageNumber]; 
+    return value;
 }

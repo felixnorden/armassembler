@@ -31,6 +31,6 @@ void setPixel(FrameBuffer* this, uint8 x, uint8 y, uint8 activate);
 // through the whole buffer, in contrast to the pages on the graphics display.
 uint8 getPageValue(FrameBuffer *this,uint16 pageNumber);
 
-extern const FrameBuffer frameBuffer;
+extern FrameBuffer frameBuffer;
 
 #endif // FRAMEBUFFER_H
