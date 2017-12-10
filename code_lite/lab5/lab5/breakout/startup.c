@@ -6,6 +6,7 @@
 #include "breakoutobjects.h"
 #include "util/renderer.h"
 #include "util/gpio.h"
+#include "util/keyb.h"
 
 void startup(void) __attribute__((naked)) __attribute__((section(".start_section")));
 
@@ -13,7 +14,21 @@ void renderLoop(void);
 void updateLoop(void);
 
 extern Object ball;
+extern Object rectangle;
 extern Renderer renderer;
+extern Object paddle;
+
+
+#define RECTANGLE_AMOUNT 84
+// if one, rectangle is kill
+// 14 rectangles in a row
+// 6 rows in total
+uint8 rectangleArray[RECTANGLE_AMOUNT];
+
+void getRectanglePos(uint8 index, Point *point) {
+	point->x = (index%14) * (rectangle.geo->sizex+2);
+	point->y = (index/14) * (rectangle.geo->sizey+2);
+}
 
 void init_app(void)
 {
@@ -30,6 +45,9 @@ void init_app(void)
 	GPIO_D.OTYPER &= 0x0000;
 	GPIO_D.PUPDR &= 0x0000FFFF;
 	GPIO_D.PUPDR |= 0x00AA0000;
+
+	renderer.setFrameBuffer(&renderer, &frameBuffer);
+	renderer.init();
 }
 
 void startup(void)
@@ -42,62 +60,128 @@ void startup(void)
 	);
 }
 
-void drawTest(void)
+void updatePaddle(void)
 {
-	uint32 i;
-	init_app();
-	graphic_initialize();
-
-#ifndef SIMULATOR
-	graphic_clear_screen();
-#endif
-	renderer.setFrameBuffer(&renderer, &frameBuffer);
-
-	/*for (uint16 index = 0; index < frameBuffer.pages; index++)
-	{
-		*(frameBuffer.frame + index) = 0xFF;
-	}*/
-	
-	for (i = 0; i < 128; i++)
-	{
-		frameBuffer.setPixel(&frameBuffer, i,10,TRUE);
+	uint8 input = keyb();
+		
+	// Up
+	if (input == 1) {
+		// Do nothing
 	}
-	for (i = 0; i < 64; i++)
+	// Left
+	else if (input == 4) 
 	{
-		frameBuffer.setPixel(&frameBuffer, 10, i,TRUE);
+		paddle.dirx = -PADDLE_SPEED;
 	}
-
-	renderer.renderFrame(&renderer);
-	delay_milli(1000);
-
-	for (i = 0; i < 128; i++)
+	// Down
+	else if (input == 5)
 	{
-		frameBuffer.setPixel(&frameBuffer, i,10,FALSE);
+		// Do nothing
 	}
-	for (i = 0; i < 64; i++)
+	// Right
+	else if (input == 6)
+	{	
+		paddle.dirx = PADDLE_SPEED;
+	}
+	else
 	{
-		frameBuffer.setPixel(&frameBuffer, 10, i,FALSE);
+		paddle.dirx = 0;
 	}
 	
-	renderer.renderFrame(&renderer);
+	paddle.move(&paddle);
 }
 
-void test(void)
+void ballCollision(void)
 {
-	init_app();
-	renderer.setFrameBuffer(&renderer, &frameBuffer);
-	renderer.init();
-	while (1)
-	{
-		ball.clear(&ball);
-		updateLoop();
-		renderLoop();
+	if (ball.posx + ball.geo->sizex > 126 || ball.posx < 1) {
+			ball.dirx *= -1;
+		}
+		
+		if (ball.posy + ball.geo->sizey > 126) {
+			ball.diry *= -1;
+		}
+}
+
+void paddleCollision(void) {
+	if (ball.posx < paddle.posx + paddle.geo->sizex && ball.posx + ball.geo->sizex > paddle.posx) {
+			if (ball.posy + ball.geo->sizey > paddle.posy) {
+				ball.diry *= -1;
+			}
+		}
+}
+
+void rectangleCollisions(void) {
+	for(uint8 i = 0; i < RECTANGLE_AMOUNT; i++) {
+		if (rectangleArray[i]) {
+				
+			static Point pos = {0,0};
+			getRectanglePos(i, &pos);
+			
+			if (ball.posx <= pos.x + rectangle.geo->sizex && ball.posx + ball.geo->sizex >= pos.x) {
+				//ball.dirx*=-1;
+				
+				if (ball.posy < pos.y + rectangle.geo->sizey &&  ball.posy + ball.geo->sizey > pos.y) {
+					ball.diry *= -1;
+					rectangleArray[i] = TRUE;
+				}
+			}
+		}
 	}
 }
 
 void main(void)
 {
-	test();
+	init_app();
+	while(TRUE) {
+		// Draw inverse
+		drawObjectToBuffer(&ball, &frameBuffer, FALSE);
+		drawObjectToBuffer(&paddle, &frameBuffer, FALSE);
+		
+		for(uint8 i = 0; i < RECTANGLE_AMOUNT; i++) 
+		{
+			static Point pos = {0,0};
+			getRectanglePos(i, &pos);
+			rectangle.posx = pos.x;
+			rectangle.posy = pos.y;
+			drawObjectToBuffer(&rectangle, &frameBuffer, FALSE);
+		}
+		
+			//Todo rectangles
+		
+		
+		// Update player paddle
+		updatePaddle();
+		
+		// Update ball
+		ball.move(&ball);
+		
+		// Check collisions
+		ballCollision();
+		paddleCollision();
+		rectangleCollisions();
+		// Update scores
+
+		// Draw to buffer
+		drawObjectToBuffer(&ball, &frameBuffer, TRUE);
+		drawObjectToBuffer(&paddle, &frameBuffer, TRUE);
+		
+		for(uint8 i = 0; i < RECTANGLE_AMOUNT; i++) 
+		{
+			if (!rectangleArray[i]) {
+				static Point pos = {0,0};
+				getRectanglePos(i, &pos);
+				rectangle.posx = pos.x;
+				rectangle.posy = pos.y;
+				drawObjectToBuffer(&rectangle, &frameBuffer, TRUE);
+			}
+		}
+		
+		// Render to screen
+		renderer.renderFrame(&renderer);
+		
+		// Render scores to AsciiDisplay
+		// Todo
+	}
 }
 
 void renderLoop(void)

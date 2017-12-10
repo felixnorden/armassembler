@@ -43,6 +43,8 @@
     <File Name="util/renderer.h"/>
     <File Name="util/types.h"/>
     <File Name="util/object.c"/>
+    <File Name="util/keyb.h"/>
+    <File Name="util/keyb.c"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

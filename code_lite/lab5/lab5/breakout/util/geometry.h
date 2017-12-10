@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-#define MAX_POINTS 20
+#define MAX_POINTS 21
 
 typedef struct tPoint
 {
