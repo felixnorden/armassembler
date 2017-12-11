@@ -18,8 +18,12 @@ extern Object rectangle;
 extern Renderer renderer;
 extern Object paddle;
 
-#define COLLISION_ERROR_MARGIN 2.0f
+#define COLLISION_ERROR_MARGIN 1.0f
 #define RECTANGLE_AMOUNT 84
+
+int8 lives = 2;
+uint32 ballDeathDelay = 0;
+
 // if one, rectangle is kill
 // 14 rectangles in a row
 // 6 rows in total
@@ -30,25 +34,6 @@ void getRectanglePos(uint8 index, Point *point) {
 	point->y = (index/14) * (rectangle.geo->sizey+2) + 2;
 }
 
-void init_app(void)
-{
-#ifdef USBDM
-	*((unsigned long *)0x40023830) = 0x18;
-	__asm volatile(" LDR R0,=0x08000209\n BLX R0 \n");
-#endif
-
-	GPIO_E.MODER = 0x55555555;
-	GPIO_E.OSPEEDR = 0x55555555;
-	GPIO_E.OTYPER = 0x0;
-
-	GPIO_D.MODER = 0x55000000;
-	GPIO_D.OTYPER &= 0x0000;
-	GPIO_D.PUPDR &= 0x0000FFFF;
-	GPIO_D.PUPDR |= 0x00AA0000;
-
-	renderer.setFrameBuffer(&renderer, &frameBuffer);
-	renderer.init();
-}
 
 void startup(void)
 {
@@ -63,14 +48,13 @@ void startup(void)
 void updatePaddle(void)
 {
 	uint8 input = keyb();
-
+		
 	// Up
-	if (input == 1)
-	{
+	if (input == 1) {
 		// Do nothing
 	}
 	// Left
-	else if (input == 4)
+	else if (input == 4) 
 	{
 		paddle.dirx = -PADDLE_SPEED;
 	}
@@ -92,6 +76,13 @@ void updatePaddle(void)
 	paddle.move(&paddle);
 }
 
+void reset(void) {
+	ball.posx = 62;
+	ball.posy = 32;
+	lives--;
+	ballDeathDelay = 15;
+}
+
 void ballCollision(void)
 {
 	if (ball.posx + ball.geo->sizex > 126 || ball.posx < 1)
@@ -102,6 +93,11 @@ void ballCollision(void)
 	if (ball.posy < 2)
 	{
 		ball.diry *= -1;
+	}
+	
+	if (ball.posy + ball.geo->sizey > 64)
+	{
+		reset();
 	}
 }
 
@@ -143,78 +139,42 @@ void paddleCollision(void)
 
 }
 
-void rectangleCollisions(void)
+uint8 rectangleCollisions(Object *rec, uint16 index)
 {
-	for (uint8 i = 0; i < RECTANGLE_AMOUNT; i++)
+		if (ball.posx <= rec->posx + rec->geo->sizex && ball.posx + ball.geo->sizex >= rec->posx)
 	{
-		if (rectangleArray[i])
+		if (ball.posy + ball.geo->sizey >= rec->posy && ball.posy <= rec->posy + rec->geo->sizey)
 		{
-
-			static Point pos = {0, 0};
-			getRectanglePos(i, &pos);
-
-			if (ball.posx <= pos.x + rectangle.geo->sizex && ball.posx + ball.geo->sizex >= pos.x)
+			// Check if ball is within inner error margin of X-axis
+			if (ball.posx < rec->posx + rec->geo->sizex - COLLISION_ERROR_MARGIN &&
+				ball.posx + ball.geo->sizex > rec->posx + COLLISION_ERROR_MARGIN)
 			{
-				//ball.dirx*=-1;
-
-				if (ball.posy < pos.y + rectangle.geo->sizey && ball.posy + ball.geo->sizey > pos.y)
+				// If ball is within top/bottom error margin, then invert Y-axis direction
+				if (ball.posy + ball.geo->sizey < rec->posy + COLLISION_ERROR_MARGIN ||
+					ball.posy > rec->posy + rec->geo->sizey - COLLISION_ERROR_MARGIN)
 				{
 					ball.diry *= -1;
-					rectangleArray[i] = TRUE;
+					return;
 				}
 			}
+			// Check if ball is within inner error margin of Y-axis
+			if (ball.posy + ball.geo->sizey > rec->posy + COLLISION_ERROR_MARGIN &&
+				ball.posy < rec->posy + rec->geo->sizey - COLLISION_ERROR_MARGIN)
+			{
+				// If ball is inside left/right error margin, then invert X-axis direction
+				if (ball.posx + ball.geo->sizex < rec->posx + COLLISION_ERROR_MARGIN ||
+					ball.posx > rec->posx + rec->geo->sizex - COLLISION_ERROR_MARGIN)
+				{
+					ball.dirx *= -1;
+					return;
+				}
+			}
+			// If not in error margins, then we have hit a corner -> invert both axes
+			ball.dirx *= -1;
+			ball.diry *= -1;
 		}
 	}
-}
 
-void gameLoop(void) {
-	
-		// Draw inverse
-		drawObjectToBuffer(&ball, &frameBuffer, FALSE);
-		drawObjectToBuffer(&paddle, &frameBuffer, FALSE);
-
-		for (uint8 i = 0; i < RECTANGLE_AMOUNT; i++)
-		{
-			static Point pos = {0, 0};
-			getRectanglePos(i, &pos);
-			rectangle.posx = pos.x;
-			rectangle.posy = pos.y;
-			drawObjectToBuffer(&rectangle, &frameBuffer, FALSE);
-		}		
-		
-		// Update player paddle
-		updatePaddle();
-
-		// Update ball
-		ball.move(&ball);
-
-		// Check collisions
-		ballCollision();
-		paddleCollision();
-		rectangleCollisions();
-		// Update scores
-
-		// Draw to buffer
-		drawObjectToBuffer(&ball, &frameBuffer, TRUE);
-		drawObjectToBuffer(&paddle, &frameBuffer, TRUE);
-
-		for (uint8 i = 0; i < RECTANGLE_AMOUNT; i++)
-		{
-			if (!rectangleArray[i])
-			{
-				static Point pos = {0, 0};
-				getRectanglePos(i, &pos);
-				rectangle.posx = pos.x;
-				rectangle.posy = pos.y;
-				drawObjectToBuffer(&rectangle, &frameBuffer, TRUE);
-			}
-		}
-
-		// Render to screen
-		renderer.renderFrame(&renderer);
-
-		// Render scores to AsciiDisplay
-		// Todo
 }
 
 drawFrame(void)
@@ -223,30 +183,163 @@ drawFrame(void)
 	// Top side
 	for (uint16 i = 8; i < 1023; i+=8)
 	{
-		*(frameBuffer.frame + i) = 0x01;
+		*(frameBuffer.frame + i) |= 0x01;
 	}
 	
 	// Left side
 	for(uint8 i = 0; i < 8; i++) {
-		*(frameBuffer.frame + i) = 0xFF;
+		*(frameBuffer.frame + i) |= 0xFF;
 	}
 	
 	//Right side
 	for(uint16 i = 1024-8; i < 1024; i++) {
-		*(frameBuffer.frame + i) = 0xFF;
+		*(frameBuffer.frame + i) |= 0xFF;
 	}
 	
+}
+
+void gameLoop(void) {
+	
+		// Draw inverse
+		drawObjectToBuffer(&ball, &frameBuffer, FALSE);
+		drawObjectToBuffer(&paddle, &frameBuffer, FALSE);
+		
+		for(uint8 i = 0; i < RECTANGLE_AMOUNT; i++) 
+		{
+			static Point pos = {0,0};
+			getRectanglePos(i, &pos);
+			rectangle.posx = pos.x;
+			rectangle.posy = pos.y;
+			drawObjectToBuffer(&rectangle, &frameBuffer, FALSE);
+		}		
+		
+		// Update player paddle
+		updatePaddle();
+		
+		// Update ball
+		if (ballDeathDelay> 0) 
+		{
+			ballDeathDelay--;
+		}
+		else 
+		{
+			ball.move(&ball);
+		}
+		
+		// Check collisions
+		ballCollision();
+		paddleCollision();
+		
+		for (uint8 i = 0; i < RECTANGLE_AMOUNT; i++)
+		{	
+			if (rectangleArray[i] == 0)
+			{
+				static Point pos = {0,0};
+				getRectanglePos(i,&pos);
+				rectangle.posx = pos.x;
+				rectangle.posy = pos.y;
+				
+				if (rectangleCollisions(&rectangle, i))
+				{
+					rectangleArray[i] = TRUE;
+					break;
+				}
+			}
+		}
+		// Update scores
+
+		// Draw to buffer
+		drawObjectToBuffer(&ball, &frameBuffer, TRUE);
+		drawObjectToBuffer(&paddle, &frameBuffer, TRUE);
+		
+		for(uint8 i = 0; i < RECTANGLE_AMOUNT; i++) 
+		{
+			if (!rectangleArray[i]) {
+				static Point pos = {0,0};
+				getRectanglePos(i, &pos);
+				rectangle.posx = pos.x;
+				rectangle.posy = pos.y;
+				drawObjectToBuffer(&rectangle, &frameBuffer, TRUE);
+			}
+		}
+		drawFrame();
+		// Render to screen
+		renderer.renderFrame(&renderer);
+		
+		// Render scores to AsciiDisplay
+		// Todo
+}
+
+
+deathScreen() {
+	static uint16 screenPage = 0;
+	
+	uint8 input = keyb();
+		
+	// Restart
+	if (input == 3) {
+		// Reset game
+		lives = 2;
+		screenPage = 0;
+		
+		// Clear screen
+		for(uint16 i = 0; i < 1024; i++)
+		{
+			*(frameBuffer.frame + i) = 0x00;
+		}
+		
+		// Reset rectangles
+		for(uint16 i = 0; i < RECTANGLE_AMOUNT; i++)
+		{
+			*(rectangleArray + i) = 0x00;
+		}
+	}
+	
+	// Fill screen
+	if (screenPage < 1024)
+	{	
+		for(uint8 i = 0; i < 16; i++)
+		{
+			*(frameBuffer.frame + screenPage) = 0xFF;
+			screenPage++;
+		}
+	}
+	
+	renderFrame(&renderer);
+}
+
+
+void init_app(void)
+{
+#ifdef USBDM
+	*((unsigned long *)0x40023830) = 0x18;
+	__asm volatile(" LDR R0,=0x08000209\n BLX R0 \n");
+#endif
+
+	GPIO_E.MODER = 0x55555555;
+	GPIO_E.OSPEEDR = 0x55555555;
+	GPIO_E.OTYPER = 0x0;
+
+	GPIO_D.MODER = 0x55000000;
+	GPIO_D.OTYPER &= 0x0000;
+	GPIO_D.PUPDR &= 0x0000FFFF;
+	GPIO_D.PUPDR |= 0x00AA0000;
+
+	renderer.setFrameBuffer(&renderer, &frameBuffer);
+	renderer.init();
 }
 
 void main(void)
 {
 	init_app();
-	drawFrame();
-	
-	renderer.renderFrame(&renderer);
 	
 	while(TRUE) {
-		gameLoop();
+		if (lives > -1)
+		{
+			gameLoop();
+		} else {
+			deathScreen();
+		}
 	}
 }
 

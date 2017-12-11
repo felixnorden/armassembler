@@ -1,7 +1,6 @@
 #ifndef GRAPHIC_DISPLAY_H
 #define GRAPHIC_DISPLAY_H
 #include "types.h"
-#include "delay.h"
 
 
 #define PORT_BASE   0x40021000

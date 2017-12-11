@@ -16,8 +16,16 @@ void renderFrame(Renderer *renderer)
         // Render byte to display
         graphic_write_data(
             renderer->frame->getPageValue(renderer->frame, page),
-            selectedScreen);
+            selectedScreen
+		);
+			
+		if (page % 20 == 0)
+		{
+		graphic_write_command(LCD_ON, B_CS1 | B_CS2);	
+		}
     }
+	
+	graphic_write_command(LCD_ON, B_CS1 | B_CS2);	
 }
 
 void init(void)
