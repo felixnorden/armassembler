@@ -136,12 +136,12 @@ void paddleCollision(void)
 					return;
 				}
 			}
+			// If not in error margins, then we have hit a corner -> invert both axes
+			ball.dirx *= -1;
+			ball.diry *= -1;
 		}
 	}
 
-	// If not in error margins, then we have hit a corner -> invert both axes
-	ball.dirx *= -1;
-	ball.diry *= -1;
 }
 
 void rectangleCollisions(void)

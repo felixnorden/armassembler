@@ -2,8 +2,8 @@
 
 void drawObjectToBuffer(Object* object, FrameBuffer *fb, uint8 activate)
 {
-    uint8 xOffset = (Point) object->posx;
-    uint8 yOffset = (Point) object->posy;
+    uint8 xOffset = (uint8) object->posx;
+    uint8 yOffset = (uint8) object->posy;
 
     for (int pixel = 0; pixel < object->geo->numpoints; pixel++)
     {
