@@ -168,11 +168,8 @@ void rectangleCollisions(void)
 	}
 }
 
-void main(void)
-{
-	init_app();
-	while (TRUE)
-	{
+void gameLoop(void) {
+	
 		// Draw inverse
 		drawObjectToBuffer(&ball, &frameBuffer, FALSE);
 		drawObjectToBuffer(&paddle, &frameBuffer, FALSE);
@@ -184,10 +181,8 @@ void main(void)
 			rectangle.posx = pos.x;
 			rectangle.posy = pos.y;
 			drawObjectToBuffer(&rectangle, &frameBuffer, FALSE);
-		}
-
-		//Todo rectangles
-
+		}		
+		
 		// Update player paddle
 		updatePaddle();
 
@@ -221,6 +216,38 @@ void main(void)
 
 		// Render scores to AsciiDisplay
 		// Todo
+}
+
+drawFrame(void)
+{
+	
+	// Top side
+	for (uint16 i = 8; i < 1023; i+=8)
+	{
+		*(frameBuffer.frame + i) = 0x01;
+	}
+	
+	// Left side
+	for(uint8 i = 0; i < 8; i++) {
+		*(frameBuffer.frame + i) = 0xFF;
+	}
+	
+	//Right side
+	for(uint16 i = 1024-8; i < 1024; i++) {
+		*(frameBuffer.frame + i) = 0xFF;
+	}
+	
+}
+
+void main(void)
+{
+	init_app();
+	drawFrame();
+	
+	renderer.renderFrame(&renderer);
+	
+	while(TRUE) {
+		gameLoop();
 	}
 }
 
