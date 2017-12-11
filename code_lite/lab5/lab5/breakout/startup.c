@@ -25,10 +25,9 @@ extern Object paddle;
 // 6 rows in total
 uint8 rectangleArray[RECTANGLE_AMOUNT];
 
-void getRectanglePos(uint8 index, Point *point)
-{
-	point->x = (index % 14) * (rectangle.geo->sizex + 2);
-	point->y = (index / 14) * (rectangle.geo->sizey + 2);
+void getRectanglePos(uint8 index, Point *point) {
+	point->x = (index%14) * (rectangle.geo->sizex+2) + 2;
+	point->y = (index/14) * (rectangle.geo->sizey+2) + 2;
 }
 
 void init_app(void)
