@@ -35,7 +35,7 @@ Geometry ballGeometry = {
 Object ball = {
 	&ballGeometry,
 	1,-1,
-	62,50,
+	62f,50f,
 	draw_object,
 	clear_object,
 	update_object,
@@ -55,7 +55,7 @@ Geometry rectangleGeometry = {
 Object rectangle = {
 	&rectangleGeometry,
 	0,0,
-	0,0,
+	0f,0f,
 	draw_object,
 	clear_object,
 	update_object,
@@ -74,7 +74,7 @@ Geometry paddleGeometry = {
 Object paddle = {
 	&paddleGeometry,
 	0,0,
-	60,62,
+	60f,62f,
 	draw_object,
 	clear_object,
 	update_object,
