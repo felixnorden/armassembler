@@ -18,16 +18,17 @@ extern Object rectangle;
 extern Renderer renderer;
 extern Object paddle;
 
-
+#define COLLISION_ERROR_MARGIN 2.0f
 #define RECTANGLE_AMOUNT 84
 // if one, rectangle is kill
 // 14 rectangles in a row
 // 6 rows in total
 uint8 rectangleArray[RECTANGLE_AMOUNT];
 
-void getRectanglePos(uint8 index, Point *point) {
-	point->x = (index%14) * (rectangle.geo->sizex+2);
-	point->y = (index/14) * (rectangle.geo->sizey+2);
+void getRectanglePos(uint8 index, Point *point)
+{
+	point->x = (index % 14) * (rectangle.geo->sizex + 2);
+	point->y = (index / 14) * (rectangle.geo->sizey + 2);
 }
 
 void init_app(void)
@@ -63,13 +64,14 @@ void startup(void)
 void updatePaddle(void)
 {
 	uint8 input = keyb();
-		
+
 	// Up
-	if (input == 1) {
+	if (input == 1)
+	{
 		// Do nothing
 	}
 	// Left
-	else if (input == 4) 
+	else if (input == 4)
 	{
 		paddle.dirx = -PADDLE_SPEED;
 	}
@@ -80,47 +82,84 @@ void updatePaddle(void)
 	}
 	// Right
 	else if (input == 6)
-	{	
+	{
 		paddle.dirx = PADDLE_SPEED;
 	}
 	else
 	{
 		paddle.dirx = 0;
 	}
-	
+
 	paddle.move(&paddle);
 }
 
 void ballCollision(void)
 {
-	if (ball.posx + ball.geo->sizex > 126 || ball.posx < 1) {
-			ball.dirx *= -1;
-		}
-		
-		if (ball.posy + ball.geo->sizey > 126) {
-			ball.diry *= -1;
-		}
+	if (ball.posx + ball.geo->sizex > 126 || ball.posx < 1)
+	{
+		ball.dirx *= -1;
+	}
+
+	if (ball.posy < 2)
+	{
+		ball.diry *= -1;
+	}
 }
 
-void paddleCollision(void) {
-	if (ball.posx < paddle.posx + paddle.geo->sizex && ball.posx + ball.geo->sizex > paddle.posx) {
-			if (ball.posy + ball.geo->sizey > paddle.posy) {
-				ball.diry *= -1;
+void paddleCollision(void)
+{
+	if (ball.posx <= paddle.posx + paddle.geo->sizex && ball.posx + ball.geo->sizex >= paddle.posx)
+	{
+		if (ball.posy + ball.geo->sizey >= paddle.posy && ball.posy <= paddle.posy + paddle.geo->sizey)
+		{
+			// Check if ball is within inner error margin of X-axis
+			if (ball.posx < paddle.posx + paddle.geo->sizex - COLLISION_ERROR_MARGIN &&
+				ball.posx + ball.geo->sizex > paddle.posx + COLLISION_ERROR_MARGIN)
+			{
+				// If ball is within top/bottom error margin, then invert Y-axis direction
+				if (ball.posy + ball.geo->sizey < paddle.posy + COLLISION_ERROR_MARGIN ||
+					ball.posy > paddle.posy + paddle.geo->sizey - COLLISION_ERROR_MARGIN)
+				{
+					ball.diry *= -1;
+					return;
+				}
+			}
+			// Check if ball is within inner error margin of Y-axis
+			if (ball.posy + ball.geo->sizey > paddle.posy + COLLISION_ERROR_MARGIN &&
+				ball.posy < paddle.posy + paddle.geo->sizey - COLLISION_ERROR_MARGIN)
+			{
+				// If ball is inside left/right error margin, then invert X-axis direction
+				if (ball.posx + ball.geo->sizex < paddle.posx + COLLISION_ERROR_MARGIN ||
+					ball.posx > paddle.posx + paddle.geo->sizex - COLLISION_ERROR_MARGIN)
+				{
+					ball.dirx *= -1;
+					return;
+				}
 			}
 		}
+	}
+
+	// If not in error margins, then we have hit a corner -> invert both axes
+	ball.dirx *= -1;
+	ball.diry *= -1;
 }
 
-void rectangleCollisions(void) {
-	for(uint8 i = 0; i < RECTANGLE_AMOUNT; i++) {
-		if (rectangleArray[i]) {
-				
-			static Point pos = {0,0};
+void rectangleCollisions(void)
+{
+	for (uint8 i = 0; i < RECTANGLE_AMOUNT; i++)
+	{
+		if (rectangleArray[i])
+		{
+
+			static Point pos = {0, 0};
 			getRectanglePos(i, &pos);
-			
-			if (ball.posx <= pos.x + rectangle.geo->sizex && ball.posx + ball.geo->sizex >= pos.x) {
+
+			if (ball.posx <= pos.x + rectangle.geo->sizex && ball.posx + ball.geo->sizex >= pos.x)
+			{
 				//ball.dirx*=-1;
-				
-				if (ball.posy < pos.y + rectangle.geo->sizey &&  ball.posy + ball.geo->sizey > pos.y) {
+
+				if (ball.posy < pos.y + rectangle.geo->sizey && ball.posy + ball.geo->sizey > pos.y)
+				{
 					ball.diry *= -1;
 					rectangleArray[i] = TRUE;
 				}
@@ -132,29 +171,29 @@ void rectangleCollisions(void) {
 void main(void)
 {
 	init_app();
-	while(TRUE) {
+	while (TRUE)
+	{
 		// Draw inverse
 		drawObjectToBuffer(&ball, &frameBuffer, FALSE);
 		drawObjectToBuffer(&paddle, &frameBuffer, FALSE);
-		
-		for(uint8 i = 0; i < RECTANGLE_AMOUNT; i++) 
+
+		for (uint8 i = 0; i < RECTANGLE_AMOUNT; i++)
 		{
-			static Point pos = {0,0};
+			static Point pos = {0, 0};
 			getRectanglePos(i, &pos);
 			rectangle.posx = pos.x;
 			rectangle.posy = pos.y;
 			drawObjectToBuffer(&rectangle, &frameBuffer, FALSE);
 		}
-		
-			//Todo rectangles
-		
-		
+
+		//Todo rectangles
+
 		// Update player paddle
 		updatePaddle();
-		
+
 		// Update ball
 		ball.move(&ball);
-		
+
 		// Check collisions
 		ballCollision();
 		paddleCollision();
@@ -164,21 +203,22 @@ void main(void)
 		// Draw to buffer
 		drawObjectToBuffer(&ball, &frameBuffer, TRUE);
 		drawObjectToBuffer(&paddle, &frameBuffer, TRUE);
-		
-		for(uint8 i = 0; i < RECTANGLE_AMOUNT; i++) 
+
+		for (uint8 i = 0; i < RECTANGLE_AMOUNT; i++)
 		{
-			if (!rectangleArray[i]) {
-				static Point pos = {0,0};
+			if (!rectangleArray[i])
+			{
+				static Point pos = {0, 0};
 				getRectanglePos(i, &pos);
 				rectangle.posx = pos.x;
 				rectangle.posy = pos.y;
 				drawObjectToBuffer(&rectangle, &frameBuffer, TRUE);
 			}
 		}
-		
+
 		// Render to screen
 		renderer.renderFrame(&renderer);
-		
+
 		// Render scores to AsciiDisplay
 		// Todo
 	}
