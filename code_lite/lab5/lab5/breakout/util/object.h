@@ -6,15 +6,15 @@
 typedef struct tObject
 {
     GeometryPtr         geo;
-    int8                dirx, diry;
-    int8                posx, posy;
+    float               dirx, diry;
+    float                posx, posy;
     void                (*draw) (struct tObject *);
     void                (*clear) (struct tObject *);
     void                (*move) (struct tObject *);
-    void                (*set_speed) (struct tObject *, int8 speedx, int8 speedy);
+    void                (*set_speed) (struct tObject *, float speedx, float speedy);
 } Object, *ObjectPtr;
 
-void set_object_speed(ObjectPtr obj, int8 speedx, int8 speedy);
+void set_object_speed(ObjectPtr obj, float speedx, float speedy);
 void update_object(ObjectPtr obj);
 
 
