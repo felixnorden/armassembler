@@ -8,6 +8,7 @@
 #include "util/gpio.h"
 #include "util/keyb.h"
 #include "util/asciidisplay.h"
+#include "util/math.h"
 
 void startup(void) __attribute__((naked)) __attribute__((section(".start_section")));
 
