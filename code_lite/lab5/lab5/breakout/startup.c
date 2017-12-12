@@ -7,6 +7,7 @@
 #include "util/renderer.h"
 #include "util/gpio.h"
 #include "util/keyb.h"
+#include "util/asciidisplay.h"
 
 void startup(void) __attribute__((naked)) __attribute__((section(".start_section")));
 
@@ -22,6 +23,7 @@ extern Object paddle;
 #define RECTANGLE_AMOUNT 84
 
 int8 lives = 2;
+uint8 score = 0;
 uint32 ballDeathDelay = 0;
 
 // if one, rectangle is kill
@@ -208,6 +210,7 @@ void gameLoop(void) {
 		{
 			static Point pos = {0,0};
 			getRectanglePos(i, &pos);
+			score = 0;
 			rectangle.posx = pos.x;
 			rectangle.posy = pos.y;
 			drawObjectToBuffer(&rectangle, &frameBuffer, FALSE);
@@ -273,13 +276,13 @@ void gameLoop(void) {
 
 deathScreen() {
 	static uint16 screenPage = 0;
-	
 	uint8 input = keyb();
 		
 	// Restart
 	if (input == 3) {
 		// Reset game
 		lives = 2;
+		score = 0;
 		screenPage = 0;
 		
 		// Clear screen
@@ -294,6 +297,17 @@ deathScreen() {
 			*(rectangleArray + i) = 0x00;
 		}
 	}
+
+	// Show final score. Draw only once
+	if (screenPage < 1)
+	{
+		ascii_gotoxy(1,1);
+		flushToAsciiDisplay("GAME OVER");
+		ascii_gotoxy(1,2);
+		flushToAsciiDisplay("Final score: ");
+		flushToAsciiDisplay(intToChar(score));
+	}
+
 	
 	// Fill screen
 	if (screenPage < 1024)
@@ -308,6 +322,65 @@ deathScreen() {
 	renderFrame(&renderer);
 }
 
+uint8 abs(uint8 number)
+{
+	if (number < 0)
+	{
+		return -number;
+	}
+	else
+	{
+		return number;
+	}
+}
+
+char* intToChar(int8 number)
+{
+	static char chars[4];
+	static uint8 digits[3];
+
+	digits[0] = abs(number / 100);	// Tripple digit number
+	digits[1] = abs(number / 10);	// Double digit number
+	digits[2] = abs(number % 10);	// Single digit number
+
+	uint8 i = 0;
+
+	if (number < 0) {
+		chars[0] = 44; // Negative sign
+		i = 1;
+	}
+
+	for(int j = 0; j < 3; j++) {
+		chars[i + j] = digits[j] + 48; // Ascii digit offset
+	}
+
+	return chars;
+}
+
+static char *firstLine = "Score: ";
+static char *secondLine = "Lives: ";
+
+void flushToAsciiDisplay(char * text)
+{
+	while (*text) 
+	{
+		ascii_write_char(*text++);
+	}
+}
+
+
+void updateAsciiDisplay(void)
+{
+	// Write first line
+	ascii_gotoxy(1,1);
+	flushToAsciiDisplay(firstLine);
+	flushToAsciiDisplay(intToChar(lives));
+
+	// Write second line
+	ascii_gotoxy(1,2);
+	flushToAsciiDisplay(secondLine);
+	flushToAsciiDisplay(intToChar(score));
+}
 
 void init_app(void)
 {
@@ -327,6 +400,8 @@ void init_app(void)
 
 	renderer.setFrameBuffer(&renderer, &frameBuffer);
 	renderer.init();
+
+	ascii_init();
 }
 
 void main(void)
@@ -341,14 +416,4 @@ void main(void)
 			deathScreen();
 		}
 	}
-}
-
-void renderLoop(void)
-{
-	ball.draw(&ball);
-	renderer.renderFrame(&renderer);
-}
-void updateLoop(void)
-{
-	ball.move(&ball);
 }
